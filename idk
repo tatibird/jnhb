@@ -1,0 +1,39 @@
+local KnitClient = debug.getupvalue(require(lplr.PlayerScripts.TS.controllers.game["block-break-controller"]).BlockBreakController.onEnable, 1)
+local Client = require(game:GetService("ReplicatedStorage").TS.remotes).default.Client
+
+local bedwars = {
+    ["sprintTable"] = KnitClient.Controllers.SprintController,
+    ["SwordController"] = KnitClient.Controllers.SwordController,
+    ["AttackRemote"] = getremote(debug.getconstants(getmetatable(KnitClient.Controllers.SwordController)["attackEntity"])),
+    ["SwingSwordRegion"] = getmetatable(KnitClient.Controllers.SwordController).swingSwordInRegion,
+    ["KnockbackTable"] = debug.getupvalue(require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil.calculateKnockbackVelocity, 1),
+    ["KnockbackTable2"] = require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil,
+    ["VelocityUtil"]  = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].util["velocity-util"]).VelocityUtil,
+    ["KnockbackTable"] = debug.getupvalue(require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil.calculateKnockbackVelocity, 1),
+    ["KnockbackTable2"] = require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil,
+    ["Remotes"] = {},
+    ["QueueMeta"] = require(game:GetService("ReplicatedStorage").TS.game["queue-meta"]).QueueMeta,
+    ["ClientHandler"] = Client,
+    ["ItemTable"] = debug.getupvalue(require(repstorage.TS.item["item-meta"]).getItemMeta, 1),
+    ["SoundManager"] = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).SoundManager,
+    ["SoundList"] = require(game:GetService("ReplicatedStorage").TS.sound["game-sound"]).GameSound,
+    ["CombatConstant"] = require(repstorage.TS.combat["combat-constant"]).CombatConstant,
+    ["AnimationUtil"] = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].util["animation-util"]).AnimationUtil,
+    ["ViewmodelController"] = KnitClient.Controllers.ViewmodelController,
+            ["getInventory"] = function(plr)
+        local plr = plr or lplr
+        local suc, result = pcall(function() return InventoryUtil.getInventory(plr) end)
+        return (suc and result or {
+            ["items"] = {},
+            ["armor"] = {},
+            ["hand"] = nil
+        })
+    end,
+    ["CheckWhitelisted"] = function(plr, ownercheck)
+    end,
+    ["getEntityTable"] = require(game:GetService("ReplicatedStorage").TS.entity["entity-util"]).EntityUtil,
+    ["ClientStoreHandler"] = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
+    
+}
+
+local oldveloh, oldvelov, oldvelofunc = bedwars["KnockbackTable"]["kbDirectionStrength"], bedwars["KnockbackTable"]["kbUpwardStrength"], bedwars["VelocityUtil"].applyVelocity
