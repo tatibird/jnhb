@@ -1,18 +1,12 @@
 repeat task.wait() until game:IsLoaded()
 
-warn([[
-    
-    Bedwars remotes recent changes:
-    Added consume remote (maybe?)
-]])
-
 local lp = game:GetService("Players").LocalPlayer
 
-function getremote(t)
-    for i, v in pairs(t) do
-        if v == "Client" then
-            local tab = t[i + 1]
-            return tab
+function gr(t)
+    for x, z in pairs(t) do
+        if z == "Client" then
+            local b = t[x + 1]
+            return b
         end
     end
     return ""
@@ -20,42 +14,29 @@ end
 
 local KnitClient = debug.getupvalue(require(lp.PlayerScripts.TS.knit).setup, 6)
 local Client = require(game:GetService"ReplicatedStorage".TS.remotes).default.Client
-local Consume = getremote(debug.getconstants(debug.getproto(getmetatable(KnitClient.Controllers.ConsumeController).onEnable, 1)))
+local Consume = gr(debug.getconstants(debug.getproto(getmetatable(KnitClient.Controllers.ConsumeController).onEnable, 1)))
 
-
-local bedwars = {
-    ["sprintTable"] = KnitClient.Controllers.SprintController,
-    ["SwordController"] = KnitClient.Controllers.SwordController,
-    ["AttackRemote"] = getremote(debug.getconstants(getmetatable(KnitClient.Controllers.SwordController)["attackEntity"])),
-    ["SwingSwordRegion"] = getmetatable(KnitClient.Controllers.SwordController).swingSwordInRegion,
-    ["KnockbackTable"] = debug.getupvalue(require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil.calculateKnockbackVelocity, 1),
-    ["KnockbackTable2"] = require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil,
-    ["VelocityUtil"]  = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].util["velocity-util"]).VelocityUtil,
-    ["KnockbackTable"] = debug.getupvalue(require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil.calculateKnockbackVelocity, 1),
-    ["KnockbackTable2"] = require(game:GetService("ReplicatedStorage").TS.damage["knockback-util"]).KnockbackUtil,
-    ["Remotes"] = {},
-    ["QueueMeta"] = require(game:GetService("ReplicatedStorage").TS.game["queue-meta"]).QueueMeta,
-    ["ClientHandler"] = Client,
-    ["ItemTable"] = debug.getupvalue(require(repstorage.TS.item["item-meta"]).getItemMeta, 1),
-    ["SoundManager"] = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).SoundManager,
-    ["SoundList"] = require(game:GetService("ReplicatedStorage").TS.sound["game-sound"]).GameSound,
-    ["CombatConstant"] = require(repstorage.TS.combat["combat-constant"]).CombatConstant,
-    ["AnimationUtil"] = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].util["animation-util"]).AnimationUtil,
-    ["ViewmodelController"] = KnitClient.Controllers.ViewmodelController,
-            ["getInventory"] = function(plr)
-        local plr = plr or lplr
-        local suc, result = pcall(function() return InventoryUtil.getInventory(plr) end)
-        return (suc and result or {
-            ["items"] = {},
-            ["armor"] = {},
-            ["hand"] = nil
-        })
-    end,
-    ["CheckWhitelisted"] = function(plr, ownercheck)
-    end,
-    ["getEntityTable"] = require(game:GetService("ReplicatedStorage").TS.entity["entity-util"]).EntityUtil,
-    ["ClientStoreHandler"] = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
-    
+Bedwars = {
+    SwordInfo = {
+        [1] = { Name = "wood_sword", Display = "Wood Sword", Rank = 1 },
+        [2] = { Name = "stone_sword", Display = "Stone Sword", Rank = 2 },
+        [3] = { Name = "iron_sword", Display = "Iron Sword", Rank = 3 },
+        [4] = { Name = "diamond_sword", Display = "Diamond Sword", Rank = 4 },
+        [5] = { Name = "emerald_sword", Display = "Emerald Sword", Rank = 5 },
+        [6] = { Name = "rageblade", Display = "Rage Blade", Rank = 6 },
+    },
+    PickupRemote = Client:Get(gr(debug.getconstants(getmetatable(KnitClient.Controllers.ItemDropController).checkForPickup))),
+    ChestObserve = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged["Inventory:SetObservedChest"],
+    ChestGet = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged["Inventory:ChestGetItem"],
+    ChestGive = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged["Inventory:ChestGiveItem"],
+    GroundHit = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.GroundHit,
+    AbilityRemote = game:GetService("ReplicatedStorage"):FindFirstChild("events-@easy-games/game-core:shared/game-core-networking@getEvents.Events").useAbility,
+    PurchaseItem = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.BedwarsPurchaseItem,
+    AttackRemote = Client:Get(gr(debug.getconstants(getmetatable(KnitClient.Controllers.SwordController)["attackEntity"])))["instance"],
+    PaintRemote = Client:Get(gr(debug.getconstants(KnitClient.Controllers.PaintShotgunController.fire))),
+    HarvestRemote = game:GetService("ReplicatedStorage").rbxts_include.node_modules:FindFirstChild("@rbxts").net.out._NetManaged.CropHarvest,
+    Eat = Client:Get(Consume),
+    SwordController = KnitClient.Controllers.SwordController,
 }
 
-local oldveloh, oldvelov, oldvelofunc = bedwars["KnockbackTable"]["kbDirectionStrength"], bedwars["KnockbackTable"]["kbUpwardStrength"], bedwars["VelocityUtil"].applyVelocity
+return Bedwars
