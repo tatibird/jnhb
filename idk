@@ -1,5 +1,27 @@
-local KnitClient = debug.getupvalue(require(lplr.PlayerScripts.TS.controllers.game["block-break-controller"]).BlockBreakController.onEnable, 1)
-local Client = require(game:GetService("ReplicatedStorage").TS.remotes).default.Client
+repeat task.wait() until game:IsLoaded()
+
+warn([[
+    
+    Bedwars remotes recent changes:
+    Added consume remote (maybe?)
+]])
+
+local lp = game:GetService("Players").LocalPlayer
+
+function getremote(t)
+    for i, v in pairs(t) do
+        if v == "Client" then
+            local tab = t[i + 1]
+            return tab
+        end
+    end
+    return ""
+end
+
+local KnitClient = debug.getupvalue(require(lp.PlayerScripts.TS.knit).setup, 6)
+local Client = require(game:GetService"ReplicatedStorage".TS.remotes).default.Client
+local Consume = getremote(debug.getconstants(debug.getproto(getmetatable(KnitClient.Controllers.ConsumeController).onEnable, 1)))
+
 
 local bedwars = {
     ["sprintTable"] = KnitClient.Controllers.SprintController,
